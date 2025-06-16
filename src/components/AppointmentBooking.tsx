@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,12 +10,27 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { Calendar as CalendarIcon, Clock, User, CreditCard } from "lucide-react";
 import { format } from "date-fns";
+import { apiService } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const AppointmentBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [appointmentType, setAppointmentType] = useState("");
+  const [patientInfo, setPatientInfo] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    symptoms: ""
+  });
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [isBooking, setIsBooking] = useState(false);
+  
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const doctors = [
     "Dr. Sarah Johnson - Cardiology",
@@ -36,6 +50,109 @@ const AppointmentBooking = () => {
     "Urgent Care",
     "Specialist Consultation"
   ];
+
+  useEffect(() => {
+    loadDoctors();
+    if (user) {
+      setPatientInfo(prev => ({
+        ...prev,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email || "",
+        phone: user.phone || ""
+      }));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (selectedDoctor && selectedDate) {
+      checkAvailability();
+    }
+  }, [selectedDoctor, selectedDate]);
+
+  const loadDoctors = async () => {
+    try {
+      const doctorsData = await apiService.searchDoctors();
+      setDoctors(doctorsData);
+    } catch (error) {
+      console.error('Failed to load doctors:', error);
+    }
+  };
+
+  const checkAvailability = async () => {
+    if (!selectedDoctor || !selectedDate) return;
+    
+    try {
+      const availability = await apiService.checkAvailability(
+        selectedDoctor,
+        format(selectedDate, 'yyyy-MM-dd')
+      );
+      setAvailableSlots(availability.availableSlots || timeSlots);
+    } catch (error) {
+      console.error('Failed to check availability:', error);
+      setAvailableSlots(timeSlots);
+    }
+  };
+
+  const handleBookAppointment = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to book an appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!selectedDoctor || !selectedDate || !selectedTime || !appointmentType) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsBooking(true);
+    try {
+      const appointmentData = {
+        doctorId: selectedDoctor,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        time: selectedTime,
+        type: appointmentType,
+        symptoms: patientInfo.symptoms,
+        patientInfo: {
+          name: patientInfo.name,
+          email: patientInfo.email,
+          phone: patientInfo.phone
+        }
+      };
+
+      const appointment = await apiService.bookAppointment(appointmentData);
+      
+      toast({
+        title: "Appointment booked successfully!",
+        description: "You will receive a confirmation email shortly.",
+      });
+
+      // Reset form
+      setSelectedDate(undefined);
+      setSelectedTime("");
+      setSelectedDoctor("");
+      setAppointmentType("");
+      setPatientInfo(prev => ({ ...prev, symptoms: "" }));
+      
+    } catch (error) {
+      toast({
+        title: "Booking failed",
+        description: "Please try again or contact support.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
+  const selectedDoctorData = doctors.find(doc => doc._id === selectedDoctor);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -60,8 +177,8 @@ const AppointmentBooking = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {doctors.map((doctor) => (
-                      <SelectItem key={doctor} value={doctor}>
-                        {doctor}
+                      <SelectItem key={doctor._id} value={doctor._id}>
+                        {doctor.firstName} {doctor.lastName} - {doctor.specialization}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -108,7 +225,7 @@ const AppointmentBooking = () => {
               <div>
                 <Label>Available Time Slots</Label>
                 <div className="grid grid-cols-2 gap-2 mt-2">
-                  {timeSlots.map((time) => (
+                  {availableSlots.map((time) => (
                     <Button
                       key={time}
                       variant={selectedTime === time ? "default" : "outline"}
@@ -127,23 +244,41 @@ const AppointmentBooking = () => {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="patient-name">Patient Name</Label>
-                <Input id="patient-name" placeholder="Enter your full name" />
+                <Input 
+                  id="patient-name" 
+                  value={patientInfo.name}
+                  onChange={(e) => setPatientInfo(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Enter your full name" 
+                />
               </div>
 
               <div>
                 <Label htmlFor="patient-email">Email Address</Label>
-                <Input id="patient-email" type="email" placeholder="Enter your email" />
+                <Input 
+                  id="patient-email" 
+                  type="email" 
+                  value={patientInfo.email}
+                  onChange={(e) => setPatientInfo(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter your email" 
+                />
               </div>
 
               <div>
                 <Label htmlFor="patient-phone">Phone Number</Label>
-                <Input id="patient-phone" placeholder="Enter your phone number" />
+                <Input 
+                  id="patient-phone" 
+                  value={patientInfo.phone}
+                  onChange={(e) => setPatientInfo(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="Enter your phone number" 
+                />
               </div>
 
               <div>
                 <Label htmlFor="symptoms">Symptoms/Reason for Visit</Label>
                 <Textarea 
                   id="symptoms" 
+                  value={patientInfo.symptoms}
+                  onChange={(e) => setPatientInfo(prev => ({ ...prev, symptoms: e.target.value }))}
                   placeholder="Describe your symptoms or reason for the appointment..."
                   className="h-24"
                 />
@@ -151,7 +286,7 @@ const AppointmentBooking = () => {
             </div>
           </div>
 
-          {selectedDoctor && selectedDate && selectedTime && (
+          {selectedDoctorData && selectedDate && selectedTime && (
             <Card className="bg-blue-50 border-blue-200">
               <CardHeader>
                 <CardTitle className="text-lg">Appointment Summary</CardTitle>
@@ -159,7 +294,13 @@ const AppointmentBooking = () => {
               <CardContent className="space-y-2">
                 <div className="flex justify-between">
                   <span>Doctor:</span>
-                  <span className="font-medium">{selectedDoctor}</span>
+                  <span className="font-medium">
+                    {selectedDoctorData.firstName} {selectedDoctorData.lastName}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Specialization:</span>
+                  <span className="font-medium">{selectedDoctorData.specialization}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Date:</span>
@@ -175,7 +316,9 @@ const AppointmentBooking = () => {
                 </div>
                 <div className="flex justify-between border-t pt-2">
                   <span className="font-semibold">Consultation Fee:</span>
-                  <span className="font-bold text-blue-600">$150</span>
+                  <span className="font-bold text-blue-600">
+                    ${selectedDoctorData.consultationFee || 150}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -186,9 +329,13 @@ const AppointmentBooking = () => {
               <User className="h-4 w-4 mr-2" />
               Save as Draft
             </Button>
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="flex-1 bg-blue-600 hover:bg-blue-700"
+              onClick={handleBookAppointment}
+              disabled={isBooking}
+            >
               <CreditCard className="h-4 w-4 mr-2" />
-              Book & Pay Now
+              {isBooking ? "Booking..." : "Book & Pay Now"}
             </Button>
           </div>
         </CardContent>
