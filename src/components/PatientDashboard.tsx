@@ -24,36 +24,36 @@ const PatientDashboard = () => {
   const upcomingAppointments = [
     {
       id: 1,
-      doctor: "Dr. Sarah Johnson",
+      doctor: "Dr. Iya Oshogbo Ikudayisi",
       specialty: "Cardiology",
       date: "2024-06-18",
       time: "10:00 AM",
       type: "Video Consultation",
       status: "confirmed",
-      fee: 150
+      fee: 95000
     },
     {
       id: 2,
-      doctor: "Dr. Michael Chen",
+      doctor: "Dr. Chibuzor Okeke",
       specialty: "Dermatology",
       date: "2024-06-20",
       time: "02:00 PM",
       type: "Follow-up",
       status: "pending",
-      fee: 120
+      fee: 100000
     }
   ];
 
   const pastAppointments = [
     {
       id: 3,
-      doctor: "Dr. Emily Rodriguez",
+      doctor: "Dr. Alabi Adeyemi",
       specialty: "Pediatrics",
       date: "2024-06-10",
       time: "11:00 AM",
       type: "General Consultation",
       status: "completed",
-      fee: 100,
+      fee: 120000,
       rating: 5
     }
   ];
@@ -63,7 +63,7 @@ const PatientDashboard = () => {
       id: 1,
       title: "Blood Test Results",
       date: "2024-06-10",
-      doctor: "Dr. Emily Rodriguez",
+      doctor: "Dr. Alabi Adeyemi",
       type: "Lab Report",
       size: "2.3 MB"
     },
@@ -71,7 +71,7 @@ const PatientDashboard = () => {
       id: 2,
       title: "X-Ray Chest",
       date: "2024-05-28",
-      doctor: "Dr. James Wilson",
+      doctor: "Dr. Molar Skushi",
       type: "Imaging",
       size: "5.7 MB"
     },
@@ -79,7 +79,7 @@ const PatientDashboard = () => {
       id: 3,
       title: "Prescription",
       date: "2024-06-10",
-      doctor: "Dr. Emily Rodriguez",
+      doctor: "Dr. Ifeoluwa O",
       type: "Prescription",
       size: "0.5 MB"
     }
@@ -88,17 +88,17 @@ const PatientDashboard = () => {
   const payments = [
     {
       id: 1,
-      amount: 100,
+      amount: 95000,
       date: "2024-06-10",
-      doctor: "Dr. Emily Rodriguez",
+      doctor: "Dr. Alabi Adeyemi",
       status: "paid",
       method: "Credit Card"
     },
     {
       id: 2,
-      amount: 150,
+      amount: 95000,
       date: "2024-06-18",
-      doctor: "Dr. Sarah Johnson",
+      doctor: "Dr.  Iya Oshogbo Ikudayisi",
       status: "pending",
       method: "Credit Card"
     }
@@ -160,7 +160,7 @@ const PatientDashboard = () => {
                         {appointment.status}
                       </Badge>
                       <p className="text-lg font-bold text-blue-600 mt-1">
-                        ${appointment.fee}
+                        ₦{appointment.fee}
                       </p>
                       <div className="flex gap-2 mt-2">
                         <Button size="sm" variant="outline">
@@ -276,7 +276,7 @@ const PatientDashboard = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold">${payment.amount}</p>
+                      <p className="text-lg font-bold">₦{payment.amount}</p>
                       <Badge className={getStatusColor(payment.status)}>
                         {payment.status}
                       </Badge>
@@ -294,10 +294,10 @@ const PatientDashboard = () => {
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
                 <Avatar>
-                  <AvatarFallback>ER</AvatarFallback>
+                  <AvatarFallback>IO</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <h4 className="font-semibold">Dr. Emily Rodriguez</h4>
+                  <h4 className="font-semibold">Dr. Ifeoluwa O</h4>
                   <p className="text-gray-600">Pediatrics</p>
                   <div className="flex items-center gap-1 mt-1">
                     {[...Array(5)].map((_, i) => (

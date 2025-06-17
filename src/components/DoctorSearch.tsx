@@ -15,52 +15,66 @@ const DoctorSearch = () => {
   const doctors = [
     {
       id: 1,
-      name: "Dr. Sarah Johnson",
+      name: "Dr. Ifeoluwa O",
       specialty: "Cardiology",
       rating: 4.9,
       reviews: 127,
       experience: "15 years",
-      location: "New York, NY",
+      location: "Yaba , Lagos",
       availability: "Available today",
-      consultationFee: 150,
-      image: "/placeholder.svg"
+      consultationFee: 95000,
+      image: "../public/doc.jpg"
     },
     {
       id: 2,
-      name: "Dr. Michael Chen",
+      name: "Dr. Funmi Sanni",
       specialty: "Dermatology",
       rating: 4.8,
       reviews: 89,
       experience: "12 years",
-      location: "Los Angeles, CA",
+      location: "Badagry GRA, Lagos",
       availability: "Next available: Tomorrow",
-      consultationFee: 120,
-      image: "/placeholder.svg"
+      consultationFee: 120000,
+      image: "../public/funmi.png"
     },
     {
       id: 3,
-      name: "Dr. Emily Rodriguez",
+      name: "Kaleb Kasongo BamOkpa",
       specialty: "Pediatrics",
       rating: 4.9,
       reviews: 203,
       experience: "18 years",
-      location: "Miami, FL",
+      location: "Ago Palace Way, Lagos",
       availability: "Available now",
-      consultationFee: 100,
-      image: "/placeholder.svg"
+      consultationFee: 1000,
+      image: "../public/kasongo.jpg"
     },
     {
       id: 4,
-      name: "Dr. James Wilson",
+      name: "Kimberly Kim",
       specialty: "Neurology",
       rating: 4.7,
       reviews: 156,
       experience: "20 years",
-      location: "Chicago, IL",
+      location: "Iwaya, Yaba, Lagos",
       availability: "Available today",
-      consultationFee: 200,
-      image: "/placeholder.svg"
+      consultationFee: 200000,
+      image: "../public/kim.png"
+    },
+
+    {
+      id: 5,
+      name: "Uwani  Freegift",
+      specialty: "General Medicine",
+      rating: 4.5,
+      reviews: 157,
+      experience: "21 years",
+      location: "Lekki, Lagos",
+      availability: "Available today",
+      consultationFee: 200000,
+      image: "../public/Uwani.png"
     }
+
   ];
 
   const specialties = ["Cardiology", "Dermatology", "Pediatrics", "Neurology", "General Medicine", "Psychiatry"];
@@ -144,7 +158,7 @@ const DoctorSearch = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-lg font-bold text-blue-600">
-                    ${doctor.consultationFee}
+                    ₦{doctor.consultationFee}
                   </span>
                   <span className="text-gray-500 ml-1">consultation</span>
                 </div>

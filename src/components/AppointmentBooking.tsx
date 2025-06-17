@@ -32,11 +32,11 @@ const AppointmentBooking = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const doctors = [
-    "Dr. Sarah Johnson - Cardiology",
-    "Dr. Michael Chen - Dermatology", 
-    "Dr. Emily Rodriguez - Pediatrics",
-    "Dr. James Wilson - Neurology"
+  const availableDoctors = [
+    "Dr. Ifeoluwa O - Cardiology",
+    "Dr. Kimberly Kim - Dermatology", 
+    "Dr. Esupofo Ikudayisi - Pediatrics",
+    "Dr. Jabez Kinnihun - Neurology"
   ];
 
   const timeSlots = [

@@ -12,8 +12,7 @@ const Footer = () => {
               <span className="text-2xl font-bold">ConsultCare</span>
             </div>
             <p className="text-gray-400">
-              Advanced telemedicine platform providing secure, accessible healthcare solutions 
-              through comprehensive API infrastructure.
+              Skip the queues, not the care. ConsultCare connects you instantly.
             </p>
           </div>
 
@@ -28,12 +27,12 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">API Features</h3>
+            <h3 className="font-semibold text-lg mb-4">Additional Features</h3>
             <ul className="space-y-2 text-gray-400">
-              <li>Authentication & Authorization</li>
-              <li>Appointment Management</li>
-              <li>Payment Processing</li>
-              <li>Medical Records</li>
+              <li>Cardiac Rehabilitation</li>
+              <li>Angioplasty</li>
+              <li>Sport Cardiology</li>
+              <li>Dentistry Care</li>
             </ul>
           </div>
 
@@ -42,22 +41,22 @@ const Footer = () => {
             <div className="space-y-2 text-gray-400">
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+234 703 248 3979</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>support@consultcare.com</span>
+                <span>hello@consultcare.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
+                <span>12, Medical Street, Apapa, Lagos Nigeria.</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 ConsultCare. All rights reserved. | Built with Node.js, Express & MongoDB</p>
+          <p>&copy; 2024 ConsultCare. All rights reserved. | ConsultCare — Expert Care. Anytime. Anywhere.</p>
         </div>
       </div>
     </footer>
